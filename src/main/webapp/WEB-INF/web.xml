@@ -26,7 +26,7 @@
     </context-param>
     <context-param>
         <param-name>contextConfigLocation</param-name>
-		<param-value>org.rest.spring.root</param-value>
+		<param-value>org.spring.root</param-value>
     </context-param>
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -42,7 +42,7 @@
 		</init-param>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value>org.rest.spring.rest</param-value>
+			<param-value>org.spring.rest</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>

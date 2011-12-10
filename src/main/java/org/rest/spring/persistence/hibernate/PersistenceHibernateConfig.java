@@ -6,14 +6,13 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate3.HibernateTransactionManager;
 import org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@Configuration
+// @Configuration
 @EnableTransactionManagement
 public class PersistenceHibernateConfig{
 	
@@ -23,11 +22,11 @@ public class PersistenceHibernateConfig{
 	@Value( "${url}" )
 	private String url;
 	
-	@Value( "${hibernate.dialect}" )
-	String hibernateDialect;
+	@Value( "${persistence.dialect}" )
+	String persistenceDialect;
 	
 	@Value( "${hibernate.show_sql}" )
-	String hibernateShowSql;
+	boolean hibernateShowSql;
 	
 	@Value( "${hibernate.hbm2ddl.auto}" )
 	String hibernateHbm2ddlAuto;
@@ -35,7 +34,7 @@ public class PersistenceHibernateConfig{
 	// beans
 	
 	@Bean
-	public AnnotationSessionFactoryBean alertsSessionFactory(){
+	public AnnotationSessionFactoryBean alertsSessionFactoryBean(){
 		final AnnotationSessionFactoryBean sessionFactory = new AnnotationSessionFactoryBean();
 		sessionFactory.setDataSource( this.restDataSource() );
 		sessionFactory.setPackagesToScan( new String[ ] { "org.rest" } );
@@ -56,7 +55,7 @@ public class PersistenceHibernateConfig{
 	@Bean
 	public HibernateTransactionManager transactionManager(){
 		final HibernateTransactionManager transactionManager = new HibernateTransactionManager();
-		transactionManager.setSessionFactory( this.alertsSessionFactory().getObject() );
+		transactionManager.setSessionFactory( this.alertsSessionFactoryBean().getObject() );
 		
 		return transactionManager;
 	}
@@ -71,13 +70,13 @@ public class PersistenceHibernateConfig{
 	final Properties hibernateProperties(){
 		return new Properties(){
 			{
-				this.put( "hibernate.dialect", PersistenceHibernateConfig.this.hibernateDialect );
+				this.put( "persistence.dialect", PersistenceHibernateConfig.this.persistenceDialect );
 				this.put( "hibernate.hbm2ddl.auto", PersistenceHibernateConfig.this.hibernateHbm2ddlAuto );
 				this.put( "hibernate.show_sql", PersistenceHibernateConfig.this.hibernateShowSql );
 				
-				// in progresses still
+				// NO NEED FOR THESE
 				// this.put( "hibernate.transaction.factory_class", "org.springframework.orm.hibernate3.SpringTransactionFactory" ); // SpringTransactionFactory.class.getSimpleName()
-				// this.put( "hibernate.current_session_context_class", "thread" ); // org.springframework.orm.hibernate3.SpringSessionContext
+				// this.put( "hibernate.current_session_context_class", "org.springframework.orm.hibernate3.SpringSessionContext" );
 			}
 		};
 	}
